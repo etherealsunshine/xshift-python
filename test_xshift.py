@@ -32,6 +32,14 @@ def test_angular_profiles_separate_without_root_merge():
     assert sorted(np.bincount(labels).tolist()) == [35, 35, 35]
 
 
+def test_root_merge_steps_match_java_double_loop():
+    steps = XShift._java_root_merge_steps(0.05)
+
+    assert len(steps) == 18
+    assert steps[-1] < 0.95
+
+
 if __name__ == "__main__":
     test_euclidean_blobs_have_stable_labels()
     test_angular_profiles_separate_without_root_merge()
+    test_root_merge_steps_match_java_double_loop()

@@ -137,26 +137,26 @@ Full dataset, `k=20`:
 | Run | Time | Clusters | ARI vs manual | NMI vs manual |
 |---|---:|---:|---:|---:|
 | Java VorteX | not timed cleanly | 82 | 0.1783 | 0.4363 |
-| Python original Java-like | 1008s | 78 | 0.1893 | 0.4446 |
-| Python HNSW + cached merge | 82.6s | 78 | 0.1893 | 0.4446 |
-| Python tessellation + HNSW + cached merge | 84.8s | 78 | 0.1893 | 0.4446 |
+| Python HNSW + cached merge | 87.4s | 82 | 0.1783 | 0.4363 |
+| Python tessellation + HNSW + cached merge | 90.4s | 82 | 0.1783 | 0.4363 |
 
-Python tessellation + HNSW + cached merge vs Java labels:
+Python HNSW + cached merge vs Java labels:
 
 ```text
-ARI = 0.9490
-NMI = 0.9753
+raw labels identical = true
+ARI = 1.0
+NMI = 1.0
 ```
 
-On this full Samusik run, `main_knn_backend="tessellation"` produced the same
-labels as the exact sklearn main KNN path with HNSW/cached merge
-(`ARI = 1.0`, `NMI = 1.0` between the two Python outputs). The cached merge row
-is therefore the fastest Python run measured here, while the tessellation path
+On this full Samusik run, `main_knn_backend="tessellation"` also produced the
+same labels as both Java VorteX and the exact sklearn main KNN path. The cached
+merge row is the fastest Python run measured here, while the tessellation path
 is a Java-style alternative KNN implementation for parity experiments.
 
-The port is therefore behaviorally close to Java, but not bit-identical. The
-remaining differences are likely from Java's tesselated nearest-neighbor search
-and ordering/tie details.
+The parity-sensitive detail was Java's root-valley loop: with `step = 0.05`,
+Java's floating-point `for` loop evaluates 18 interior path points (`0.05`
+through about `0.90`). Matching that loop made the full-dataset Python labels
+identical to Java's exported `cluster_id` values.
 
 ## Benchmark Scripts
 

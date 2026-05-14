@@ -462,6 +462,16 @@ class XShift:
     def _java_auto_n_size(n_samples: int, n_dimensions: int, p_value: float = 0.01) -> int:
         return int(max(0.5 * (n_dimensions + 1), -int(np.ceil(np.log(p_value / n_samples) / np.log(2)))))
 
+    @staticmethod
+    def _java_root_merge_steps(step: float) -> np.ndarray:
+        # Mirror Java's double loop: for (double k = step; k <= 1.0 - step; k += step).
+        values: list[float] = []
+        k = step
+        while k <= 1.0 - step:
+            values.append(k)
+            k += step
+        return np.asarray(values, dtype=float)
+
     def _higher_density_parents(
         self,
         neighbor_idx: np.ndarray,
@@ -486,7 +496,7 @@ class XShift:
 
         root_X = X[roots]
         updated = parents.copy()
-        steps = np.arange(self.root_merge_step, 1.0, self.root_merge_step)
+        steps = self._java_root_merge_steps(self.root_merge_step)
         last_log = time.time()
 
         for root_i, root in enumerate(roots):
