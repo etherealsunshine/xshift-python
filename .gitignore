@@ -1,0 +1,15 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+
+# Generated local outputs
+data/
+out/
+*.log
+
+# Downloaded/reference sources used during port validation
+java_sources/
+
+# Local FCS/CSV artifacts can be large
+*.fcs
+*_clustered.csv
